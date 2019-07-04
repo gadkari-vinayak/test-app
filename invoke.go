@@ -5,20 +5,20 @@ import (
         "log"
         "net/http"
         "os"
+        "os/exec"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-        log.Print("Hello world received a request.")
-        target := os.Getenv("TARGET")
-        if target == "" {
-                target = "World"
+        cmd := exec.CommandContext(r.Context(), "/bin/sh", "script.sh")
+        cmd.Stderr = os.Stderr
+        out, err := cmd.Output()
+        if err != nil {
+                w.WriteHeader(500)
         }
-        fmt.Fprintf(w, "Hello %s!\n", target)
+        w.Write(out)
 }
 
 func main() {
-        log.Print("Hello world sample started.")
-
         http.HandleFunc("/", handler)
 
         port := os.Getenv("PORT")
