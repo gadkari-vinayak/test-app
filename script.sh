@@ -1,2 +1,2 @@
 #!/bin/sh
-echo Hie ${TARGET:=World}!
+echo Hi ${TARGET:=World}!
